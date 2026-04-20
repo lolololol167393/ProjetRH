@@ -120,9 +120,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->role;
     }
 
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+    
     public function setRole(?Role $role): static
     {
         $this->role = $role;
+
+        // On synchronise avec le système de sécurité de Symfony
+        if ($role) {
+            // On récupère le nom du rôle (ex: "ROLE_ADMIN") depuis l'entité Role
+            // Assurez-vous que votre entité Role a bien une méthode getNom()
+            $this->setRoles([$role->getNom()]); 
+        } else {
+            // Si aucun rôle n'est choisi, on remet le tableau vide (ROLE_USER par défaut)
+            $this->setRoles([]); 
+        }
+
         return $this;
     }
 
