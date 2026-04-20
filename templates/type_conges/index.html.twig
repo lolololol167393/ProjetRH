@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TypeConges index{% endblock %}
+
+{% block body %}
+    <h1>TypeConges index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Jours_an</th>
+                <th>Couleur</th>
+                <th>Remuneration</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for type_conge in type_conges %}
+            <tr>
+                <td>{{ type_conge.id }}</td>
+                <td>{{ type_conge.nom }}</td>
+                <td>{{ type_conge.joursAn }}</td>
+                <td>{{ type_conge.couleur }}</td>
+                <td>{{ type_conge.remuneration ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_type_conges_show', {'id': type_conge.id}) }}">show</a>
+                    <a href="{{ path('app_type_conges_edit', {'id': type_conge.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_type_conges_new') }}">Create new</a>
+{% endblock %}

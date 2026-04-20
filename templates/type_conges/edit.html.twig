@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TypeConges{% endblock %}
+
+{% block body %}
+    <h1>Edit TypeConges</h1>
+
+    {{ include('type_conges/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_type_conges_index') }}">back to list</a>
+
+    {{ include('type_conges/_delete_form.html.twig') }}
+{% endblock %}

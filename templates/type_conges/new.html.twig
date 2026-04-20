@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TypeConges{% endblock %}
+
+{% block body %}
+    <h1>Create new TypeConges</h1>
+
+    {{ include('type_conges/_form.html.twig') }}
+
+    <a href="{{ path('app_type_conges_index') }}">back to list</a>
+{% endblock %}
