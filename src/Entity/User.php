@@ -6,10 +6,12 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -80,9 +82,9 @@ class User
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
-        return $this->password;
+        return (string) $this->password;
     }
 
     public function setPassword(string $password): static
@@ -143,5 +145,31 @@ class User
     public function __toString(): string
     {
         return $this->prenom . ' ' . $this->nom;
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = [];
+
+        // On transforme ton entité Role en "string" technique pour Symfony
+        if ($this->role) {
+            // On récupère le champ 'droit' (ex: ROLE_ADMIN) défini dans ton entité Role
+            $roles[] = $this->role->getDroit(); 
+        }
+
+        // On garantit que chaque utilisateur possède au moins ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function eraseCredentials(): void
+    {
+        // Obligatoire mais peut rester vide si tu n'as pas de mot de passe en clair temporaire
     }
 }
