@@ -41,6 +41,7 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        /*
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
@@ -48,6 +49,21 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         // For example:
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
+        */
+        $user = $token->getUser();
+
+    // On récupère ses rôles (via ta méthode getRoles() que l'on a vérifiée avant)
+        $roles = $user->getRoles();
+
+    // LOGIQUE DE REDIRECTION
+        if (in_array('ROLE_ADMIN', $roles)) {
+            // Redirige vers la liste des utilisateurs pour les admins
+            return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
+        } else if (in_array('ROLE_USER', $roles)) {
+            // Redirige vers la page d'accueil pour les utilisateurs normaux
+            return new RedirectResponse($this->urlGenerator->generate('app_home'));
+        }
         return new RedirectResponse($this->urlGenerator->generate('app_user_index'));
     }
 
