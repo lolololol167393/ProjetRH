@@ -8,6 +8,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserType extends AbstractType
 {
@@ -16,9 +18,22 @@ class UserType extends AbstractType
         $builder
             ->add('nom')
             ->add('prenom')
-            ->add('password')
+            ->add('password', PasswordType::class, [
+                'label' => 'mot de passe',
+                'required' => false,  //valider le formulaire même si vide
+                'mapped' => false,  //Dit à Symfony de NE PAS chercher à mettre à jour l'entité automatiquement
+                'attr' => ['placeholder' => 'Laisser vide pour ne pas changer']
+            ])
             ->add('email')
-            ->add('type_contrat')
+            ->add('type_contrat', ChoiceType::class, [
+                'choices'  => [
+                    'CDI' => 'CDI',
+                    'CDD' => 'CDD',
+                    'Stage' => 'Stage',
+                    'Alternance' => 'Alternance',
+                ],
+                'label' => 'Type de contrat'
+            ])
             ->add('role', EntityType::class, [
             'class' => Role::class,
             'choice_label' => 'nom',

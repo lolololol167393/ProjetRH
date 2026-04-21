@@ -32,8 +32,9 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        #- { path: ^/user/new, roles: ROLE_ADMIN }
-        #- { path: ^/user, roles: ROLE_USER }
+        - { path: ^/user, roles: ROLE_ADMIN }
+        - { path: ^/role, roles: ROLE_ADMIN }
+        - { path: ^/type/conges, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

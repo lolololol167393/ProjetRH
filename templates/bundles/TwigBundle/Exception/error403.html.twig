@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accès Refusé{% endblock %}
+
+{% block body %}
+<div class="container text-center mt-5">
+    <h1>🚫 Oups ! Accès restreint</h1>
+    <p>Désolé, vous n'avez pas les droits nécessaires pour accéder à la gestion des utilisateurs.</p>
+    <a href="{{ path('app_user_index') }}" class="btn btn-primary">Retour à l'accueil</a>
+</div>
+{% endblock %}

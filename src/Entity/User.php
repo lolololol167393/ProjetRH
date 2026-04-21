@@ -120,26 +120,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->role;
     }
 
-    public function setRoles(array $roles): static
+    public function getRoles(): array
     {
-        $this->roles = $roles;
+        $roles = [];
 
-        return $this;
+        if ($this->role) {
+            // On récupère la valeur technique (ex: ROLE_ADMIN)
+            // Vérifiez si c'est getDroit() ou getNom() dans votre entité Role
+            $roles[] = $this->role->getDroit(); 
+        }
+
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
     
     public function setRole(?Role $role): static
     {
         $this->role = $role;
-
-        // On synchronise avec le système de sécurité de Symfony
-        if ($role) {
-            // On récupère le nom du rôle (ex: "ROLE_ADMIN") depuis l'entité Role
-            // Assurez-vous que votre entité Role a bien une méthode getNom()
-            $this->setRoles([$role->getNom()]); 
-        } else {
-            // Si aucun rôle n'est choisi, on remet le tableau vide (ROLE_USER par défaut)
-            $this->setRoles([]); 
-        }
 
         return $this;
     }
@@ -170,24 +168,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    public function getRoles(): array
-    {
-        $roles = [];
-
-        // On transforme ton entité Role en "string" technique pour Symfony
-        if ($this->role) {
-            // On récupère le champ 'droit' (ex: ROLE_ADMIN) défini dans ton entité Role
-            $roles[] = $this->role->getDroit(); 
-        }
-
-        // On garantit que chaque utilisateur possède au moins ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
-    }
-
     public function eraseCredentials(): void
     {
-        // Obligatoire mais peut rester vide si tu n'as pas de mot de passe en clair temporaire
+    
     }
 }

@@ -64,14 +64,14 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword(
+            $hashedPassword = $passwordHasher->hashPassword( // on utilise le service de hachage pour transformer le mot de passe "clair" en version cryptée
             $user,
-            $user->getPassword()
+            $user->getPassword()                             // On récupère ce qui a été tapé
         );
             $user->setPassword($hashedPassword);
 
             $entityManager->persist($user);
-            $entityManager->flush();
+            $entityManager->flush();                         // exécute réellement la requête SQL en base de données
 
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
