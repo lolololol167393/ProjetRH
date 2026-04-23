@@ -22,7 +22,7 @@ class UserType extends AbstractType
                 'label' => 'mot de passe',
                 'required' => false,  //valider le formulaire même si vide
                 'mapped' => false,  //Dit à Symfony de NE PAS chercher à mettre à jour l'entité automatiquement
-                'attr' => ['placeholder' => 'Laisser vide pour ne pas changer']
+                'attr' => ['placeholder' => 'Mot de passe']
             ])
             ->add('email')
             ->add('type_contrat', ChoiceType::class, [
