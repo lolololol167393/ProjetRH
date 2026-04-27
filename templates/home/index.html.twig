@@ -1,0 +1,93 @@
+{# templates/home/user_index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Espace RH{% endblock %}
+
+{% block body %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="h3 mb-3">Tableau de bord de <strong>{{ app.user.prenom }} {{ app.user.nom }}</strong></h1>
+        <p class="text-muted">Bienvenue dans votre espace personnel de gestion des congés.</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-5">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Congés restants</h6>
+                <h2 class="display-6 fw-bold">25 jours</h2>
+                <small>Acquis pour l'année en cours</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">En attente de validation</h6>
+                <h2 class="display-6 fw-bold">1</h2>
+                <small>Demande envoyée au manager</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Prochains congés</h6>
+                <h2 class="display-6 fw-bold">12 Mai</h2>
+                <small>Vacances de printemps</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white fw-bold">Actions rapides</div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="#" class="btn btn-outline-primary btn-lg py-3">
+                        <i class="bi bi-plus-circle"></i> Déposer une demande
+                    </a>
+                    <a href="#" class="btn btn-outline-secondary">
+                        Consulter mon profil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Mes dernières demandes</span>
+                <a href="#" class="btn btn-sm btn-link">Voir tout</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Type</th>
+                            <th>Dates</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge bg-info text-dark">Congé Payé</span></td>
+                            <td>Du 12/05 au 19/05</td>
+                            <td><span class="badge rounded-pill bg-success">Validé</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge bg-secondary text-white">RTT</span></td>
+                            <td>Le 01/06 (Matin)</td>
+                            <td><span class="badge rounded-pill bg-warning text-dark">En attente</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

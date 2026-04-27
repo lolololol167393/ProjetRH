@@ -1,0 +1,57 @@
+{# templates/home/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Gestion RH{% endblock %}
+
+{% block body %}
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm text-center">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold text-primary">Plateforme de Gestion RH</h1>
+        <p class="col-md-8 fs-4 mx-auto">Bienvenue sur votre interface moderne et responsive pour la gestion des agents et des congés.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    {# Module Agents #}
+    <div class="col-md-4">
+        <div class="card h-100 border-primary">
+            <div class="card-body">
+                <h5 class="card-title text-primary">Gestion des Agents</h5>
+                <p class="card-text">Consultez l'annuaire des collaborateurs et gérez leurs informations personnelles.</p>
+                <span class="badge bg-info text-dark mb-3">Module Actif</span>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="{{ path('app_user_index') }}" class="btn btn-primary w-100">Accéder aux Agents</a>
+            </div>
+        </div>
+    </div>
+
+    {# Module Congés #}
+    <div class="col-md-4">
+        <div class="card h-100 border-success">
+            <div class="card-body">
+                <h5 class="card-title text-success">Types de Congés</h5>
+                <p class="card-text">Configurez les différentes catégories de congés disponibles dans l'organisation.</p>
+                <span class="badge bg-success text-white mb-3">Nouveau</span>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="{{ path('app_type_conges_index') }}" class="btn btn-success w-100">Gérer les types</a>
+            </div>
+        </div>
+    </div>
+
+    {# Module Rôles #}
+    <div class="col-md-4">
+        <div class="card h-100 border-secondary">
+            <div class="card-body">
+                <h5 class="card-title text-secondary">Rôles & Permissions</h5>
+                <p class="card-text">Définissez les niveaux d'accès et les responsabilités pour chaque utilisateur.</p>
+                <span class="badge bg-secondary text-white mb-3">Système</span>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+                <a href="{{ path('app_role_index') }}" class="btn btn-secondary w-100">Voir les Rôles</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

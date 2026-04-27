@@ -31,18 +31,12 @@ final class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hashedPassword = $passwordHasher->hashPassword(
-            $user,
-            $user->getPassword()
-        );
+            $hashedPassword = $passwordHasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hashedPassword);
-
             $entityManager->persist($user);
             $entityManager->flush();
-
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
-
         return $this->render('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
@@ -61,32 +55,25 @@ final class UserController extends AbstractController
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $currentHash = $user->getPassword();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
 
-    $form = $this->createForm(UserType::class, $user);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        // On récupère ce qui a été saisi dans le champ password
-        $plainPassword = $form->get('password')->getData();
-
-        if (!empty($plainPassword)) {
-            // Si un nouveau mot de passe est saisi, on le hache et on l'enregistre
-            $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
-            $user->setPassword($hashedPassword);
-        } else {
-            // Si le champ est vide, on réinjecte l'ancien hash pour ne pas mettre à jour le MDP
-            $user->setPassword($currentHash);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->get('password')->getData(); // Si le champ est vide, on réinjecte l'ancien hash pour ne pas mettre à jour le MDP
+            if (!empty($plainPassword)) {
+                // Si un nouveau mot de passe est saisi, on le hache et on l'enregistre
+                $hashedPassword = $passwordHasher->hashPassword($user, $plainPassword);
+                $user->setPassword($hashedPassword);
+            } else {
+                $user->setPassword($currentHash); // Si le champ est vide, on réinjecte l'ancien hash pour ne pas mettre à jour le MDP
+            }
+            $entityManager->flush(); // Exécute la requête SQL
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
-
-        $entityManager->flush(); // Exécute la requête SQL
-
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    return $this->render('user/edit.html.twig', [
-        'user' => $user,
-        'form' => $form,
-    ]);
+        return $this->render('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
