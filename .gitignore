@@ -18,3 +18,8 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+# Fichiers système et de configuration locale
+.DS_Store
+
+# Sauvegardes de base de données (SQL)
+/*.sqls
