@@ -57,14 +57,14 @@ class AppCustomAuthenticator extends AbstractLoginFormAuthenticator
         $roles = $user->getRoles();
 
     // LOGIQUE DE REDIRECTION
-        if (in_array('ROLE_ADMIN', $roles)) {
+        /*if (in_array('ROLE_ADMIN', $roles)) {
             // Redirige vers la liste des utilisateurs pour les admins
             return new RedirectResponse($this->urlGenerator->generate('app_home_admin'));
         } else if (in_array('ROLE_USER', $roles)) {
             // Redirige vers la page d'accueil pour les utilisateurs normaux
             return new RedirectResponse($this->urlGenerator->generate('app_home'));
-        }
-        return new RedirectResponse($this->urlGenerator->generate('app_home_admin'));
+        }*/
+        return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
     protected function getLoginUrl(Request $request): string
