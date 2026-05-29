@@ -42,6 +42,12 @@ security:
         - { path: ^/role, roles: ROLE_ADMIN }
         - { path: ^/type/conges, roles: ROLE_ADMIN }
         - { path: ^/, roles: ROLE_USER }
+        - { path: ^/conge/new, roles: ROLE_USER }
+        - { path: ^/conge/$, roles: ROLE_USER }
+        # Les actions d'administration, de modification ou de suppression globale des congés 
+        # doivent être réservées aux managers, modérateurs ou administrateurs
+        - { path: ^/conge/\d+/edit, roles: ROLE_ADMIN }
+        - { path: ^/conge/\d+$, roles: ROLE_ADMIN, methods: [POST] }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

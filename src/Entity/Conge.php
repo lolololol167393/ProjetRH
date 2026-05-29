@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\CongeRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: CongeRepository::class)]
 class Conge
@@ -159,5 +161,20 @@ class Conge
     {
         $this->type = $type;
         return $this;
+    }
+    
+    #[Assert\Callback]
+    public function validateDates(ExecutionContextInterface $context): void
+    {
+        // On vérifie que les deux dates sont bien saisies avant de comparer
+        if ($this->date_debut !== null && $this->date_fin !== null) {
+            
+            // Si la date de fin est inférieure à la date de début
+            if ($this->date_fin < $this->date_debut) {
+                $context->buildViolation('La date de fin ne peut pas être antérieure à la date de début.')
+                    ->atPath('date_fin') // Attache l'erreur visuellement au champ date_fin
+                    ->addViolation();
+            }
+        }
     }
 }

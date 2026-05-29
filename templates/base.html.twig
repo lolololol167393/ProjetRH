@@ -26,13 +26,13 @@
                     <ul class="navbar-nav">
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_user_index') }}">Agents</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_type_conges_index') }}">Congés</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_conge_index') }}">Congés</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_role_index') }}">Rôles</a></li>
                     {% endif %}
                     {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
                         <li class="nav-item"><a class="nav-link" href="{{ path('app_user_profile') }}">Mon Profil</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_type_conges_index') }}">Mes Congés</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ path('app_role_index') }}">Demander un Congé</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_conge_index') }}">Mes Congés</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ path('app_conge_new') }}">Demander un Congé</a></li>
                     {% endif %}
                     </ul>
                     <div class="navbar-nav ms-auto">

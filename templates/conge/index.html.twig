@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes Demandes de Congés{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Mon historique de congés</h1>
+        <a href="{{ path('app_conge_new') }}" class="btn btn-primary">Déposer un congé</a>
+    </div>
+
+    {# Affichage des messages flash de succès #}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label == 'success' ? 'success' : 'danger' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    <table class="table table-striped table-hover align-middle shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Type</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Date de demande</th>
+                <th>Statut / Décision</th>
+                <th>Commentaire RH</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for conge in conges %}
+            <tr>
+                {# Badge de couleur selon le type de congé #}
+                <td>
+                    <span class="badge text-white" style="background-color: {{ conge.type.couleur }};">
+                        {{ conge.type.nom }}
+                    </span>
+                </td>
+                <td>{{ conge.dateDebut ? conge.dateDebut|date('d/m/Y') : '' }}</td>
+                <td>{{ conge.dateFin ? conge.dateFin|date('d/m/Y') : '' }}</td>
+                <td>{{ conge.dateDemande ? conge.dateDemande|date('d/m/Y') : '' }}</td>
+                <td>
+                    {# Style du badge selon le statut de la décision #}
+                    {% if conge.decision == 'En attente' %}
+                        <span class="badge bg-warning text-dark">En attente</span>
+                    {% elseif conge.decision == 'Accepté' %}
+                        <span class="badge bg-success">Accepté</span>
+                    {% else %}
+                        <span class="badge bg-danger">Refusé</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <small class="text-muted">{{ conge.commentaire ?: 'Aucun commentaire' }}</small>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center py-4 text-muted">
+                    Vous n'avez pas encore déposé de demande de congé.
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}
