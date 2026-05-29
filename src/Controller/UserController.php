@@ -43,6 +43,22 @@ final class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/profile', name: 'app_user_profile', methods: ['GET'])]
+    public function profile(): Response
+    {
+        // On récupère l'utilisateur actuellement connecté
+        $user = $this->getUser();
+
+        // Si aucun utilisateur n'est connecté, on redirige vers la page de connexion
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('user/profile.html.twig', [
+            'user' => $user,
+        ]);
+    }
+    
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {

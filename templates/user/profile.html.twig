@@ -1,0 +1,42 @@
+{# templates/user/profile.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Mon Profil</h3>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Nom</div>
+                    <div class="col-sm-8 fw-bold">{{ user.nom }}</div>
+                </div>
+               <hr>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Prenom</div>
+                    <div class="col-sm-8 fw-bold">{{ user.prenom }}</div>
+                </div>
+                <hr>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Adresse Email</div>
+                    <div class="col-sm-8">{{ user.email }}</div>
+                </div>
+                <hr>
+                <div class="row mb-3">
+                    <div class="col-sm-4 text-muted">Type de Contrat</div>
+                    <div class="col-sm-8">
+                        <span class="badge bg-secondary">{{ user.typeContrat }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between bg-light">
+                <a href="{{ path('app_home') }}" class="btn btn-outline-secondary">Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

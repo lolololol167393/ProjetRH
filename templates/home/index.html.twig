@@ -13,6 +13,7 @@
 
 <div class="row g-3 mb-5">
     <div class="col-md-4">
+        {% if is_granted('ROLE_ADMIN') %}
         <div class="card bg-primary text-white shadow-sm">
             <div class="card-body">
                 <h6 class="card-title">Congés restants</h6>
@@ -38,6 +39,34 @@
                 <small>Vacances de printemps</small>
             </div>
         </div>
+        {% endif %}
+        {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Congés restants</h6>
+                <h2 class="display-6 fw-bold">25 jours</h2>
+                <small>Acquis pour l'année en cours</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">En attente de validation</h6>
+                <h2 class="display-6 fw-bold">1</h2>
+                <small>Demande envoyée au manager</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Prochains congés</h6>
+                <h2 class="display-6 fw-bold">12 Mai</h2>
+                <small>Vacances de printemps</small>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -50,7 +79,7 @@
                     <a href="#" class="btn btn-outline-primary btn-lg py-3">
                         <i class="bi bi-plus-circle"></i> Déposer une demande
                     </a>
-                    <a href="#" class="btn btn-outline-secondary">
+                    <a href="{{ path('app_user_profile') }}" class="btn btn-outline-secondary">
                         Consulter mon profil
                     </a>
                 </div>
