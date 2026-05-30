@@ -1,122 +1,72 @@
 {# templates/home/user_index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Espace RH{% endblock %}
+{% block title %}Accueil - Projet RH{% endblock %}
 
 {% block body %}
-<div class="row mb-4">
-    <div class="col-12">
-        <h1 class="h3 mb-3">Tableau de bord de <strong>{{ app.user.prenom }} {{ app.user.nom }}</strong></h1>
-        <p class="text-muted">Bienvenue dans votre espace personnel de gestion des congés.</p>
+<div class="container mt-5">
+    <div class="p-5 mb-4 bg-light rounded-3 text-center shadow-sm">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold text-primary">Bienvenue sur WorkTogether<h1 class="h3 mb-3">Tableau de bord de <strong>{{ app.user.prenom }} {{ app.user.nom }}</strong></h1></h1>
+        </div>
     </div>
-</div>
 
-<div class="row g-3 mb-5">
-    <div class="col-md-4">
-        {% if is_granted('ROLE_ADMIN') %}
-        <div class="card bg-primary text-white shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Congés restants</h6>
-                <h2 class="display-6 fw-bold">25 jours</h2>
-                <small>Acquis pour l'année en cours</small>
+    {% if app.user %}
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h3 class="card-title mb-0 h5"><i class="bi bi-calendar-check me-2"></i>Mes Demandes de Congés</h3>
+                <a href="{{ path('app_conge_new') }}" class="btn btn-light btn-sm fw-bold">Nouvelle demande</a>
             </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-warning text-dark shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">En attente de validation</h6>
-                <h2 class="display-6 fw-bold">1</h2>
-                <small>Demande envoyée au manager</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-success text-white shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Prochains congés</h6>
-                <h2 class="display-6 fw-bold">12 Mai</h2>
-                <small>Vacances de printemps</small>
-            </div>
-        </div>
-        {% endif %}
-        {% if is_granted('ROLE_USER') and not is_granted('ROLE_ADMIN') %}
-        <div class="card bg-primary text-white shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Congés restants</h6>
-                <h2 class="display-6 fw-bold">25 jours</h2>
-                <small>Acquis pour l'année en cours</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-warning text-dark shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">En attente de validation</h6>
-                <h2 class="display-6 fw-bold">1</h2>
-                <small>Demande envoyée au manager</small>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-success text-white shadow-sm">
-            <div class="card-body">
-                <h6 class="card-title">Prochains congés</h6>
-                <h2 class="display-6 fw-bold">12 Mai</h2>
-                <small>Vacances de printemps</small>
-            </div>
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<div class="row g-4">
-    <div class="col-lg-4">
-        <div class="card shadow-sm h-100">
-            <div class="card-header bg-white fw-bold">Actions rapides</div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    <a href="{{ path('app_conge_new') }}" class="btn btn-outline-primary btn-lg py-3">
-                        <i class="bi bi-plus-circle"></i> Déposer une demande
-                    </a>
-                    <a href="{{ path('app_user_profile') }}" class="btn btn-outline-secondary">
-                        Consulter mon profil
-                    </a>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover mb-0 align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="ps-3">Type</th>
+                                <th>Date de début</th>
+                                <th>Date de fin</th>
+                                <th class="pe-3">Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for conge in conges %}
+                            <tr>
+                                <td class="ps-3 fw-semibold">{{ conge.type.nom }}</td>
+                                <td>{{ conge.dateDebut ? conge.dateDebut|date('d/m/Y') : '' }}</td>
+                                <td>{{ conge.dateFin ? conge.dateFin|date('d/m/Y') : '' }}</td>
+                                <td class="pe-3">
+                                    {% if conge.decision == 'En attente' %}
+                                        <span class="badge bg-warning text-dark px-3 py-2">En attente</span>
+                                    {% elseif conge.decision == 'Accepté' %}
+                                        <span class="badge bg-success px-3 py-2">Accepté</span>
+                                    {% else %}
+                                        <span class="badge bg-danger px-3 py-2">Refusé</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">
+                                    <i class="bi bi-info-circle me-1"></i> Vous n'avez pas encore soumis de demande de congé.
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
+            {% if conges|length > 0 %}
+                <div class="card-footer bg-white text-end py-3">
+                    <a href="{{ path('app_conge_index') }}" class="btn btn-outline-primary btn-sm">Voir tout l'historique</a>
+                </div>
+            {% endif %}
         </div>
-    </div>
-
-    <div class="col-lg-8">
-        <div class="card shadow-sm h-100">
-            <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                <span class="fw-bold">Mes dernières demandes</span>
-                <a href="#" class="btn btn-sm btn-link">Voir tout</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Type</th>
-                            <th>Dates</th>
-                            <th>Statut</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="badge bg-info text-dark">Congé Payé</span></td>
-                            <td>Du 12/05 au 19/05</td>
-                            <td><span class="badge rounded-pill bg-success">Validé</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="badge bg-secondary text-white">RTT</span></td>
-                            <td>Le 01/06 (Matin)</td>
-                            <td><span class="badge rounded-pill bg-warning text-dark">En attente</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    {% else %}
+        <div class="alert alert-warning text-center shadow-sm py-4" role="alert">
+            <h4 class="alert-heading fw-bold mb-3">Accès restreint</h4>
+            <p class="mb-3">Veuillez vous authentifier pour accéder à votre espace personnel et voir vos congés.</p>
+            <a href="{{ path('app_login') }}" class="btn btn-primary px-4 fw-bold">Se connecter</a>
         </div>
-    </div>
+    {% endif %}
 </div>
 {% endblock %}
