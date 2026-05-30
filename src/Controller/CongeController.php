@@ -23,13 +23,16 @@ final class CongeController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-
-        // 2. On filtre pour ne récupérer QUE les congés du demandeur connecté
-        $mesConges = $congeRepository->findBy(['demandeur' => $user]);
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $conges = $congeRepository->findAll();
+        } else {
+            // Si c'est un simple utilisateur, il ne voit QUE ses congés à lui
+            $conges = $congeRepository->findBy(['demandeur' => $this->getUser()]);
+        }
 
         // 3. On passe la variable '$mesConges' à la vue sous le nom 'conges'
         return $this->render('conge/index.html.twig', [
-            'conges' => $mesConges,
+            'conges' => $conges,
         ]);
     }
 

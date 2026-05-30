@@ -1,4 +1,38 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+{{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+            
+            {# 
+               Si tu veux garder le rendu automatique ordonné par Bootstrap 5, 
+               la ligne ci-dessous suffit maintenant que le thème est activé.
+            #}
+            {{ form_widget(form) }}
+
+            {# 
+               Optionnel : Si tu préfères espacer manuellement tes champs (ex: dateDebut, dateFin, motif),
+               tu peux commenter la ligne du dessus et faire ceci à la place :
+               
+               <div class="mb-3">
+                   {{ form_row(form.dateDebut) }}
+               </div>
+               <div class="mb-3">
+                   {{ form_row(form.dateFin) }}
+               </div>
+               <div class="mb-3">
+                   {{ form_row(form.motif) }}
+               </div>
+            #}
+
+        </div>
+    </div>
+
+    {# Zone des boutons d'action bien alignée #}
+    <div class="d-flex justify-content-between align-items-center">
+        <a href="{{ path('app_conge_index') }}" class="btn btn-light border">
+            <i class="bi bi-arrow-left me-2"></i>Annuler
+        </a>
+        <button class="btn btn-primary px-4 shadow-sm fw-bold">
+            <i class="bi bi-check-circle me-2"></i>{{ button_label|default('Soumettre la demande') }}
+        </button>
+    </div>
 {{ form_end(form) }}

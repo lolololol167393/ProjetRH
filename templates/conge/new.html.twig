@@ -1,11 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Conge{% endblock %}
+{% block title %}Nouvelle demande de congé - WorkTogether{% endblock %}
 
 {% block body %}
-    <h1>Create new Conge</h1>
+<div class="container py-2">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            {# En-tête épuré avec icône #}
+            <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+                <div class="bg-primary text-white rounded-3 p-3 me-3 d-flex align-items-center justify-content-center shadow-sm" style="width: 56px; height: 56px;">
+                    <i class="bi bi-calendar-plus-fill fs-4"></i>
+                </div>
+                <div>
+                    <h1 class="h3 mb-1 text-dark fw-bold">Demander un congé</h1>
+                    <p class="text-muted mb-0 small">Veuillez renseigner les dates et le motif de votre absence.</p>
+                </div>
+            </div>
 
-    {{ include('conge/_form.html.twig') }}
+            {# Formulaire stylisé #}
+            {{ include('conge/_form.html.twig') }}
 
-    <a href="{{ path('app_conge_index') }}">back to list</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
