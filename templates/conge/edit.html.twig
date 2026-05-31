@@ -1,13 +1,82 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Conge{% endblock %}
+{% block title %}Traiter la demande de congé{% endblock %}
 
 {% block body %}
-    <h1>Edit Conge</h1>
+<div class="container mt-4" style="max-width: 750px;">
+    
+    <div class="card shadow border-0">
+        <div class="card-header bg-dark text-white py-3">
+            <h1 class="h4 mb-0"><i class="fas fa-gavel me-2"></i> Traiter la demande de congé</h1>
+        </div>
+        <div class="card-body p-4">
 
-    {{ include('conge/_form.html.twig', {'button_label': 'Update'}) }}
+            <div class="card bg-light border-0 mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title border-bottom pb-2 text-secondary">Récapitulatif de la demande</h5>
+                    <div class="row g-2">
+                        <div class="col-sm-6">
+                            <strong>Agent demandeur :</strong><br>
+                            {% if conge.demandeur is not null %}
+                                <span class="text-uppercase font-weight-bold">{{ conge.demandeur.nom }}</span> {{ conge.demandeur.prenom }}
+                                <br><small class="text-muted">{{ conge.demandeur.email }}</small>
+                            {% else %}
+                                <span class="text-muted italic">Agent inconnu</span>
+                            {% endif %}
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Type demandé :</strong><br>
+                            <span class="badge bg-secondary">{{ conge.type ? conge.type.nom : 'Non spécifié' }}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Date de début :</strong><br>
+                            {{ conge.dateDebut ? conge.dateDebut|date('d/m/Y') : 'N/C' }}
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Date de fin :</strong><br>
+                            {{ conge.dateFin ? conge.dateFin|date('d/m/Y') : 'N/C' }}
+                        </div>
+                        <div class="col-12 mt-2">
+                            <strong>Commentaire de l'agent :</strong><br>
+                            <p class="text-muted mb-0 bg-white p-2 rounded border">
+                                <em>{{ conge.commentaireDemandeur ?: 'Aucun commentaire fourni par l\'agent.' }}</em>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <a href="{{ path('app_conge_index') }}">back to list</a>
+            {{ form_start(form) }}
+                
+                <div class="mb-4">
+                    {{ form_label(form.decision, null, {'label_attr': {'class': 'form-label h6 text-dark'}}) }}
+                    {{ form_widget(form.decision) }}
+                    {{ form_errors(form.decision) }}
+                    <small class="text-muted">Sélectionnez "Accepté" ou "Refusé" pour mettre à jour le statut du congé.</small>
+                </div>
 
-    {{ include('conge/_delete_form.html.twig') }}
+                <div class="mb-4">
+                    {{ form_label(form.commentaire, null, {'label_attr': {'class': 'form-label h6 text-dark'}}) }}
+                    {{ form_widget(form.commentaire) }}
+                    {{ form_errors(form.commentaire) }}
+                </div>
+
+                <div class="d-none">
+                    {{ form_rest(form) }}
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center border-top pt-3 mt-4">
+                    <a href="{{ path('app_conge_index') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-1"></i> Annuler et retourner à la liste
+                    </a>
+                    <button type="submit" class="btn btn-success px-4">
+                        <i class="fas fa-save me-1"></i> Enregistrer la décision
+                    </button>
+                </div>
+
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+</div>
 {% endblock %}

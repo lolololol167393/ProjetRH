@@ -1,50 +1,140 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Conge{% endblock %}
+{% block title %}Détails du Congé{% endblock %}
 
 {% block body %}
-    <h1>Conge</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>Détails de la demande de congé</h1>
+            <p class="text-muted mb-0">Récapitulatif et statut de la demande #{{ conge.id }}</p>
+        </div>
+        <div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_conge_edit', {'id': conge.id}) }}" class="btn btn-warning">
+                    <i class="bi bi-pencil-square"></i> Traiter / Modifier
+                </a>
+            {% endif %}
+        </div>
+    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ conge.id }}</td>
-            </tr>
-            <tr>
-                <th>Date_debut</th>
-                <td>{{ conge.dateDebut ? conge.dateDebut|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Date_fin</th>
-                <td>{{ conge.dateFin ? conge.dateFin|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Date_reponse</th>
-                <td>{{ conge.dateReponse ? conge.dateReponse|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Date_demande</th>
-                <td>{{ conge.dateDemande ? conge.dateDemande|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Commentaire</th>
-                <td>{{ conge.commentaire }}</td>
-            </tr>
-            <tr>
-                <th>Commentaire_demandeur</th>
-                <td>{{ conge.commentaireDemandeur }}</td>
-            </tr>
-            <tr>
-                <th>Decision</th>
-                <td>{{ conge.decision }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        {# Colonne Principale : Informations du congé #}
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-dark text-white py-3">
+                    <h5 class="card-title mb-0">Informations Générales</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3 border-bottom pb-2">
+                        <div class="col-sm-4 text-muted font-weight-bold">Type de congé</div>
+                        <div class="col-sm-8">
+                            {% if conge.type is not null and conge.type.nom is defined %}
+                                {% set typeNom = conge.type.nom|lower %}
+                                {% if 'payé' in typeNom %}
+                                    <span class="badge bg-primary text-white fs-6">{{ conge.type.nom }}</span>
+                                {% elseif 'rtt' in typeNom %}
+                                    <span class="badge bg-info text-dark fs-6">{{ conge.type.nom }}</span>
+                                {% elseif 'maladie' in typeNom or 'sans solde' in typeNom %}
+                                    <span class="badge bg-secondary text-white fs-6">{{ conge.type.nom }}</span>
+                                {% else %}
+                                    <span class="badge bg-dark text-white fs-6">{{ conge.type.nom }}</span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge bg-light text-dark fs-6">Non spécifié</span>
+                            {% endif %}
+                        </div>
+                    </div>
 
-    <a href="{{ path('app_conge_index') }}">back to list</a>
+                    <div class="row mb-3 border-bottom pb-2">
+                        <div class="col-sm-4 text-muted">Date de début</div>
+                        <div class="col-sm-8 fw-bold text-dark">
+                            {{ conge.dateDebut ? conge.dateDebut|date('d/m/Y') : 'Non renseignée' }}
+                        </div>
+                    </div>
 
-    <a href="{{ path('app_conge_edit', {'id': conge.id}) }}">edit</a>
+                    <div class="row mb-3 border-bottom pb-2">
+                        <div class="col-sm-4 text-muted">Date de fin</div>
+                        <div class="col-sm-8 fw-bold text-dark">
+                            {{ conge.dateFin ? conge.dateFin|date('d/m/Y') : 'Non renseignée' }}
+                        </div>
+                    </div>
 
-    {{ include('conge/_delete_form.html.twig') }}
+                    <div class="row mb-3 pb-2">
+                        <div class="col-sm-4 text-muted">Demandé le</div>
+                        <div class="col-sm-8 text-muted">
+                            {{ conge.dateDemande ? conge.dateDemande|date('d/m/Y à H:i') : 'Inconnue' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Section Commentaires / Décision RH #}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-light py-3">
+                    <h5 class="card-title mb-0">Suivi & Commentaire RH</h5>
+                </div>
+                <div class="card-body">
+                    <div class="p-3 bg-light rounded border">
+                        <p class="mb-0 text-muted font-italic">
+                            {{ conge.commentaire ?: "Aucun commentaire n'a été ajouté pour le moment." }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Colonne Latérale : Statut & Informations Agent #}
+        <div class="col-md-4">
+            {# Carte Statut #}
+            <div class="card shadow-sm border-0 mb-4 text-center">
+                <div class="card-body py-4">
+                    <h5 class="text-muted mb-3">Statut actuel</h5>
+                    {% if conge.decision == 'En attente' %}
+                        <div class="alert alert-warning border-0 shadow-sm display-6 py-2 fw-bold text-dark mb-0">
+                            En attente
+                        </div>
+                    {% elseif conge.decision == 'Accepté' %}
+                        <div class="alert alert-success border-0 shadow-sm display-6 py-2 fw-bold mb-0">
+                            Accepté
+                        </div>
+                    {% else %}
+                        <div class="alert alert-danger border-0 shadow-sm display-6 py-2 fw-bold mb-0">
+                            Refusé
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Carte Agent Demandeur (Visible tout le temps, utile pour les Admins) #}
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-secondary text-white py-2">
+                    <h6 class="mb-0">Agent demandeur</h6>
+                </div>
+                <div class="card-body">
+                    {% if conge.demandeur is not null %}
+                        <h5 class="card-title mb-1 text-dark">{{ conge.demandeur.nom|upper }} {{ conge.demandeur.prenom }}</h5>
+                        <p class="card-text text-muted small mb-0">
+                            <i class="bi bi-envelope"></i> {{ conge.demandeur.email }}
+                        </p>
+                    {% else %}
+                        <p class="card-text text-muted font-italic mb-0">Agent inconnu ou supprimé</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Actions de bas de page #}
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <a href="{{ path('app_conge_index') }}" class="btn btn-secondary">
+            Retour à la liste
+        </a>
+        
+        {% if is_granted('ROLE_ADMIN') %}
+            {# Formulaire de suppression sécurisé intégré via l'include natif #}
+            {{ include('conge/_delete_form.html.twig') }}
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
