@@ -36,7 +36,7 @@ class UserType extends AbstractType
                 ],
                 'label' => 'Type de contrat'
             ])
-            ->add('obtentionsDiplomes', CollectionType::class, [
+            ->add('diplome', CollectionType::class, [
                 'entry_type' => ObtentionDiplomeType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,         // Permet d'ajouter des lignes dynamiquement
