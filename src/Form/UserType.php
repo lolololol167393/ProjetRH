@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -36,13 +37,11 @@ class UserType extends AbstractType
                 ],
                 'label' => 'Type de contrat'
             ])
-            ->add('diplome', CollectionType::class, [
-                'entry_type' => ObtentionDiplomeType::class,
-                'entry_options' => ['label' => false],
-                'allow_add' => true,         // Permet d'ajouter des lignes dynamiquement
-                'allow_delete' => true,      // Permet de supprimer des lignes
-                'by_reference' => false,     // Force l'appel à addObtentionsDiplome() dans User.php
-                'label' => 'Diplômes possédés par l\'employé'
+            ->add('nom_diplome', TextType::class, [
+                'label' => 'Diplôme possédé par l\'employé',
+                'mapped' => false, // Ne pas mapper directement sur l'entité User
+                'required' => false,
+                'attr' => ['placeholder' => 'Ex: Master en Informatique, Licence RH...']
             ])
             ->add('role', EntityType::class, [
             'class' => Role::class,
