@@ -51,10 +51,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Conge::class, mappedBy: 'valideur')]
     private Collection $congesAValider;
 
+    /**
+     * @var Collection<int, ObtentionDiplome>
+     */
+    #[ORM\OneToMany(targetEntity: ObtentionDiplome::class, mappedBy: 'utilisateur', orphanRemoval: true)]
+    private Collection $diplome;
+
     public function __construct()
     {
         $this->mesDemandes = new ArrayCollection();
         $this->congesAValider = new ArrayCollection();
+        $this->diplome = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,5 +180,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
     
+    }
+
+    /**
+     * @return Collection<int, ObtentionDiplome>
+     */
+    public function getDiplome(): Collection
+    {
+        return $this->diplome;
+    }
+
+    public function addDiplome(ObtentionDiplome $diplome): static
+    {
+        if (!$this->diplome->contains($diplome)) {
+            $this->diplome->add($diplome);
+            $diplome->setUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDiplome(ObtentionDiplome $diplome): static
+    {
+        if ($this->diplome->removeElement($diplome)) {
+            // set the owning side to null (unless already changed)
+            if ($diplome->getUtilisateur() === $this) {
+                $diplome->setUtilisateur(null);
+            }
+        }
+
+        return $this;
     }
 }
